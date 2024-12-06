@@ -6,19 +6,19 @@ type Point = image.Point
 type Grid map[Point]string
 
 func Left(p Point) Point {
-	return p.Add(image.Pt(p.X-1, p.Y))
+	return p.Add(image.Pt(-1, 0))
 }
 
 func Right(p Point) Point {
-	return p.Add(image.Pt(p.X+1, p.Y))
+	return p.Add(image.Pt(1, 0))
 }
 
 func Up(p Point) Point {
-	return p.Add(image.Pt(p.X, p.Y+1))
+	return p.Add(image.Pt(0, -1))
 }
 
 func Down(p Point) Point {
-	return p.Add(image.Pt(p.X, p.Y-1))
+	return p.Add(image.Pt(0, 1))
 }
 
 func UpLeft(p Point) Point {
