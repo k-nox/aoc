@@ -109,7 +109,7 @@ func genPartFile(d int, pkgName string, part string) error {
 }
 
 func genMain(d int, moduleName string) error {
-	tmpl, err := template.New("registry").Parse(MainTemplate)
+	tmpl, err := template.New("main").Parse(MainTemplate)
 	if err != nil {
 		return fmt.Errorf("error parsing template: %w", err)
 	}
