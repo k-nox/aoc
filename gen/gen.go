@@ -22,7 +22,7 @@ func Generate(d int, moduleName string) error {
 		return fmt.Errorf("error generating package: %w", err)
 	}
 
-	err = genRegistry(d, moduleName)
+	err = genMain(d, moduleName)
 	if err != nil {
 		return fmt.Errorf("error generating registry: %w", err)
 	}
@@ -108,15 +108,15 @@ func genPartFile(d int, pkgName string, part string) error {
 	return nil
 }
 
-func genRegistry(d int, moduleName string) error {
-	tmpl, err := template.New("registry").Parse(RegistryTemplate)
+func genMain(d int, moduleName string) error {
+	tmpl, err := template.New("registry").Parse(MainTemplate)
 	if err != nil {
 		return fmt.Errorf("error parsing template: %w", err)
 	}
 
-	f, err := os.Create("cli/registry.go")
+	f, err := os.Create("main.go")
 	if err != nil {
-		return fmt.Errorf("error creating registry.go: %w", err)
+		return fmt.Errorf("error creating main.go: %w", err)
 	}
 	defer f.Close()
 

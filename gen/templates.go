@@ -1,8 +1,7 @@
 package gen
 
 const (
-	PartTemplate = `
-package day{{ printf "%02d" .Day }}
+	PartTemplate = `package day{{ printf "%02d" .Day }}
 
 import (
 	"github.com/k-nox/aoc/util"
@@ -18,15 +17,15 @@ func Part{{ .Part }}(useSample bool) int {
 	
 	return 0
 }
-
 `
-	RegistryTemplate = `
-// Code generated; DO NOT EDIT.
+	MainTemplate = `// Code generated; DO NOT EDIT.
 // This file was generated at
 // {{ .Timestamp }}
-package cli
+package main
 
 import (
+	"log"
+	"os"
 	"github.com/k-nox/aoc/cli"
 {{- range .Days }}
 	"{{$.ModuleName}}/{{printf "day%02d" .}}"
@@ -38,5 +37,12 @@ var registry = cli.Registry{
 	{{ . }}: {PartOne: day{{ printf "%02d" .}}.PartOne, PartTwo: day{{printf "%02d" .}}.PartTwo},
 {{- end }}
 }	
+
+func main() {
+	app := cli.App(registry, "{{ .ModuleName }}")
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}
 `
 )
