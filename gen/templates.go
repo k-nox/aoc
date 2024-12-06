@@ -27,20 +27,15 @@ func Part{{ .Part }}(useSample bool) int {
 package cli
 
 import (
+	"github.com/k-nox/aoc/cli"
 {{- range .Days }}
 	"{{$.ModuleName}}/{{printf "day%02d" .}}"
 {{- end }}
 )
 
-type part func(useSample bool) int
-type day struct {
-	PartOne part
-	PartTwo part
-}
-
-var registry = map[int]day{
+var registry = cli.Registry{
 {{- range .Days }}
-	{{ . }}: {day{{ printf "%02d" .}}.PartOne, day{{printf "%02d" .}}.PartTwo},
+	{{ . }}: {PartOne: day{{ printf "%02d" .}}.PartOne, PartTwo: day{{printf "%02d" .}}.PartTwo},
 {{- end }}
 }	
 `
