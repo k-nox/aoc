@@ -169,11 +169,11 @@ func (g *Generator) generateMain(year int) error {
 	}
 
 	path := g.concatPath(strconv.Itoa(year), "main.go")
-	f, err := os.Create(path) // main will always get overwritten in current design
+	mainFile, err := os.Create(path) // main will always get overwritten in current design
 	if err != nil {
 		return fmt.Errorf("error creating main.go: %w", err)
 	}
-	defer f.Close()
+	defer mainFile.Close()
 
 	dirContents, err := os.ReadDir(g.concatPath(strconv.Itoa(year)))
 	if err != nil {
@@ -186,7 +186,7 @@ func (g *Generator) generateMain(year int) error {
 		}
 	}
 
-	err = tmpl.Execute(f, struct {
+	err = tmpl.Execute(mainFile, struct {
 		Timestamp  time.Time
 		Days       []string
 		ModuleName string

@@ -1,0 +1,19 @@
+linters:
+  presets:
+    - bugs
+    - comment
+    - error
+    - complexity
+    - import
+    - test
+    - unused
+  disable:
+    - depguard
+    - exhaustruct
+linters-settings:
+  mnd:
+    ignored-numbers:
+      - 0666
+      - 0750
+  testifylint:
+    enable-all: true

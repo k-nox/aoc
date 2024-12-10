@@ -25,6 +25,7 @@ func (g *Generator) createFile(path string) (*os.File, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error creating file %s: %w", path, err)
 	}
+
 	return f, nil
 }
 
@@ -33,5 +34,6 @@ func createDirIfNotExist(name string) error {
 	if err != nil && !errors.Is(err, fs.ErrExist) {
 		return fmt.Errorf("failed to create %s dir: %w", name, err)
 	}
+
 	return nil
 }
