@@ -3,7 +3,6 @@ package gen
 import (
 	"errors"
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -15,7 +14,8 @@ import (
 )
 
 var (
-	ErrNoModule = errors.New("no go.mod found")
+	ErrNoModule   = errors.New("no go.mod found")
+	ErrFileExists = errors.New("unable to create file as it already exists")
 )
 
 type Option func(*Generator)
@@ -103,15 +103,17 @@ func (g *Generator) createInputs(day int, year int) error {
 		return err
 	}
 
-	err = createFileInDir(inputDir, "input.txt")
+	inpF, err := g.createFile(filepath.Join(inputDir, "input.txt"))
 	if err != nil {
 		return err
 	}
+	defer inpF.Close()
 
-	err = createFileInDir(inputDir, "sample.txt")
+	sampleF, err := g.createFile(filepath.Join(inputDir, "sample.txt"))
 	if err != nil {
 		return err
 	}
+	defer sampleF.Close()
 
 	return nil
 }
@@ -139,7 +141,7 @@ func (g *Generator) generatePartFile(day int, year int, part string) error {
 		return fmt.Errorf("error parsing template: %w", err)
 	}
 	path := g.concatPath(strconv.Itoa(year), formatDay(day), fmt.Sprintf("part%s.go", strings.ToLower(part)))
-	f, err := os.Create(path)
+	f, err := g.createFile(path)
 	if err != nil {
 		return fmt.Errorf("error creating part%s.go: %w", strings.ToLower(part), err)
 	}
@@ -167,7 +169,7 @@ func (g *Generator) generateMain(year int) error {
 	}
 
 	path := g.concatPath(strconv.Itoa(year), "main.go")
-	f, err := os.Create(path)
+	f, err := os.Create(path) // main will always get overwritten in current design
 	if err != nil {
 		return fmt.Errorf("error creating main.go: %w", err)
 	}
@@ -210,22 +212,4 @@ func (g *Generator) concatPath(paths ...string) string {
 
 func formatDay(day int) string {
 	return fmt.Sprintf("day%02d", day)
-}
-
-func createDirIfNotExist(name string) error {
-	err := os.MkdirAll(name, 0750)
-	if err != nil && !errors.Is(err, fs.ErrExist) {
-		return fmt.Errorf("failed to create %s dir: %w", name, err)
-	}
-	return nil
-}
-
-func createFileInDir(dir string, name string) error {
-	fullPath := fmt.Sprintf("%s/%s", dir, name)
-	f, err := os.Create(fullPath)
-	if err != nil {
-		return fmt.Errorf("error creating file %s: %w", fullPath, err)
-	}
-	defer f.Close()
-	return nil
 }
