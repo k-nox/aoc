@@ -22,13 +22,13 @@ func NewFileScanner(path string) *FileScanner {
 	}
 }
 
-func NewScannerForInput(day int, readSample bool) *FileScanner {
+func NewScannerForInput(year int, day int, readSample bool) *FileScanner {
 	file := "input"
 	if readSample {
 		file = "sample"
 	}
 
-	return NewFileScanner(fmt.Sprintf("input/day%02d/%s.txt", day, file))
+	return NewFileScanner(fmt.Sprintf("input/%d/day%02d/%s.txt", year, day, file))
 }
 
 func (f *FileScanner) Close() {

@@ -8,7 +8,7 @@ import (
 )
 
 func Part{{ .Part }}(useSample bool) int {
-	f := util.NewScannerForInput({{ .Day }}, useSample)
+	f := util.NewScannerForInput({{ .Year }}, {{ .Day }}, useSample)
 	defer f.Close()
 
 	for f.Scan() {
@@ -18,6 +18,7 @@ func Part{{ .Part }}(useSample bool) int {
 	return 0
 }
 `
+
 	MainTemplate = `// Code generated; DO NOT EDIT.
 // This file was generated at
 // {{ .Timestamp }}
@@ -28,13 +29,13 @@ import (
 	"os"
 	"github.com/k-nox/aoc/cli"
 {{- range .Days }}
-	"{{$.ModuleName}}/{{printf "day%02d" .}}"
+	"{{$.ModuleName}}/{{$.Year}}/{{.}}"
 {{- end }}
 )
 
 var registry = cli.Registry{
 {{- range .Days }}
-	{{ . }}: {PartOne: day{{ printf "%02d" .}}.PartOne, PartTwo: day{{printf "%02d" .}}.PartTwo},
+	"{{ . }}": {PartOne: {{ . }}.PartOne, PartTwo: {{ . }}.PartTwo},
 {{- end }}
 }	
 

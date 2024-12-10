@@ -7,4 +7,4 @@ type Day struct {
 	PartTwo Part
 }
 
-type Registry map[int]Day
+type Registry map[string]Day
