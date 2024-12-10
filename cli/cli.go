@@ -26,6 +26,18 @@ func StandaloneApp() *cli.App {
 			},
 			Action: generate,
 		},
+		{
+			Name:    "run",
+			Aliases: []string{"r"},
+			Usage:   "Run solutions for specified day",
+			Flags: []cli.Flag{
+				flagMap[day],
+				flagMap[year],
+				flagMap[path],
+				flagMap[sample],
+			},
+			Action: runStandalone,
+		},
 	}
 
 	return app

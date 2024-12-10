@@ -2,6 +2,9 @@ package cli
 
 import (
 	"fmt"
+	"os/exec"
+	"path/filepath"
+	"strconv"
 
 	"github.com/k-nox/aoc/gen"
 	"github.com/urfave/cli/v2"
@@ -31,10 +34,33 @@ func generate(c *cli.Context) error {
 	return nil
 }
 
+func runStandalone(c *cli.Context) error {
+	day := c.Int(day)
+	year := c.Int(year)
+	useSample := c.Bool(sample)
+	path := c.Path(path)
+
+	dayArg := fmt.Sprintf("--day=%d", day)
+	useSampleArg := fmt.Sprintf("--sample=%t", useSample)
+
+	mainFile := filepath.Join(path, strconv.Itoa(year), "main.go")
+	cmd := exec.Command("go", "run", mainFile, dayArg, useSampleArg)
+	out, err := cmd.Output()
+	if err != nil {
+		return cli.Exit(err, 1)
+	}
+
+	fmt.Println("running:", cmd.String())
+
+	fmt.Print(string(out))
+
+	return nil
+}
+
 func run(registry Registry) func(*cli.Context) error {
 	return func(c *cli.Context) error {
-		day := c.Int("day")
-		useSample := c.Bool("sample")
+		day := c.Int(day)
+		useSample := c.Bool(sample)
 
 		d, ok := registry[fmt.Sprintf("day%02d", day)]
 		if !ok {
