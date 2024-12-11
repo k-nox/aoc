@@ -23,23 +23,23 @@ The file structure created by this tool looks like this:
 
 ```
 |-- 2024
-|		|-- day01
-|		|		|-- partone.go
-|		|		|-- parttwo.go
-|		|-- day02
-|		|		|-- partone.go
-|		|		|-- partwo.go
-|		|-- main.go
+|   |-- day01
+|   |   |-- partone.go
+|   |   |-- parttwo.go
+|   |-- day02
+|   |   |-- partone.go
+|   |   |-- partwo.go
+|   |-- main.go
 |-- 2025
-|		|-- day01
-|		|		|-- partone.go
-|		|		|-- parttwo.go
-|		|-- main.go
+|   |-- day01
+|   |   |-- partone.go
+|   |   |-- parttwo.go
+|   |-- main.go
 |-- input
-|		|-- 2024
-|		|		|-- day01
-|		|		|		|-- input.txt
-|		|		|		|-- sample.txt
+|   |-- 2024
+|   |   |-- day01
+|   |   |   |-- input.txt
+|   |   |   |-- sample.txt
 ```
 
 Running `aoc gen` with no flags will assume you want to generate files for the current year & day. For example if it's the Dec 12, 2024, the tool will generate `day12` files under the `2024` folder. You can use the `--day` and `--year` commands to provide a different day & year.
