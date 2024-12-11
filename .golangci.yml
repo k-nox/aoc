@@ -10,6 +10,7 @@ linters:
   disable:
     - depguard
     - exhaustruct
+    - funlen
 linters-settings:
   mnd:
     ignored-numbers:

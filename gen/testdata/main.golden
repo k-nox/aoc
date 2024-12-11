@@ -1,0 +1,22 @@
+// Code generated; DO NOT EDIT.
+// This file was generated at
+// {{ .Timestamp }}
+package main
+
+import (
+	"log"
+	"os"
+	"github.com/k-nox/aoc/cli"
+	"github.com/k-nox/aoctesting/2024/day01"
+)
+
+var registry = cli.Registry{
+	"day01": {PartOne: day01.PartOne, PartTwo: day01.PartTwo},
+}	
+
+func main() {
+	app := cli.App(registry)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
+}

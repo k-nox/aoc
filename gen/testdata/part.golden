@@ -1,0 +1,6 @@
+package day01
+
+func PartOne(useSample bool) int {
+	
+	return 0
+}
