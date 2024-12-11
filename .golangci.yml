@@ -11,6 +11,8 @@ linters:
     - depguard
     - exhaustruct
     - funlen
+    - paralleltest
+    - wrapcheck
 linters-settings:
   mnd:
     ignored-numbers:
