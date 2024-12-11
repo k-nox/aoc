@@ -3,17 +3,7 @@ package gen
 const (
 	PartTemplate = `package day{{ printf "%02d" .Day }}
 
-import (
-	"github.com/k-nox/aoc/util"
-)
-
 func Part{{ .Part }}(useSample bool) int {
-	f := util.NewScannerForInput({{ .Year }}, {{ .Day }}, useSample)
-	defer f.Close()
-
-	for f.Scan() {
-
-	}
 	
 	return 0
 }
