@@ -7,15 +7,15 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	"golang.org/x/mod/modfile"
 )
 
 var (
-	ErrNoModule   = errors.New("no go.mod found")
-	ErrFileExists = errors.New("unable to create file as it already exists")
+	ErrNoModule        = errors.New("no go.mod found")
+	ErrFileExists      = errors.New("unable to create file as it already exists")
+	ErrNoValidTemplate = errors.New("no valid template found")
 )
 
 type Option func(*Generator)
@@ -32,20 +32,49 @@ func WithForce(force bool) Option {
 	}
 }
 
-func ModuleName(name string) Option {
+func WithModuleName(name string) Option {
 	return func(g *Generator) {
 		g.moduleName = name
 	}
 }
 
+func WithPartTemplateFile(tmpl string) Option {
+	return func(g *Generator) {
+		g.partTemplate = templ{
+			file: tmpl,
+			name: "part",
+		}
+	}
+}
+
+func WithMainTemplateFile(tmpl string) Option {
+	return func(g *Generator) {
+		g.mainTemplate = templ{
+			file: tmpl,
+			name: "main",
+		}
+	}
+}
+
 type Generator struct {
-	path       string
-	force      bool
-	moduleName string
+	path         string
+	force        bool
+	moduleName   string
+	partTemplate templ
+	mainTemplate templ
 }
 
 func New(opts ...Option) (*Generator, error) {
-	generator := &Generator{}
+	generator := &Generator{
+		mainTemplate: templ{
+			text: MainTemplate,
+			name: "main",
+		},
+		partTemplate: templ{
+			text: PartTemplate,
+			name: "part",
+		},
+	}
 
 	for _, o := range opts {
 		o(generator)
@@ -136,9 +165,9 @@ func (g *Generator) generateDailyPackage(day int, year int) error {
 }
 
 func (g *Generator) generatePartFile(day int, year int, part string) error {
-	tmpl, err := template.New("part").Parse(PartTemplate)
+	partTemplate, err := g.partTemplate.parse()
 	if err != nil {
-		return fmt.Errorf("error parsing template: %w", err)
+		return ErrNoValidTemplate
 	}
 	path := g.concatPath(strconv.Itoa(year), formatDay(day), fmt.Sprintf("part%s.go", strings.ToLower(part)))
 	f, err := g.createFile(path)
@@ -146,7 +175,7 @@ func (g *Generator) generatePartFile(day int, year int, part string) error {
 		return fmt.Errorf("error creating part%s.go: %w", strings.ToLower(part), err)
 	}
 	defer f.Close()
-	err = tmpl.Execute(f, struct {
+	err = partTemplate.Execute(f, struct {
 		Day  int
 		Year int
 		Part string
@@ -163,9 +192,9 @@ func (g *Generator) generatePartFile(day int, year int, part string) error {
 }
 
 func (g *Generator) generateMain(year int) error {
-	tmpl, err := template.New("main").Parse(MainTemplate)
+	mainTemplate, err := g.mainTemplate.parse()
 	if err != nil {
-		return fmt.Errorf("error parsing template: %w", err)
+		return ErrNoValidTemplate
 	}
 
 	path := g.concatPath(strconv.Itoa(year), "main.go")
@@ -186,7 +215,7 @@ func (g *Generator) generateMain(year int) error {
 		}
 	}
 
-	err = tmpl.Execute(mainFile, struct {
+	err = mainTemplate.Execute(mainFile, struct {
 		Timestamp  time.Time
 		Days       []string
 		ModuleName string

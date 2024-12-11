@@ -18,6 +18,15 @@ func generate(c *cli.Context) error {
 	if c.IsSet(force) {
 		generatorOptions = append(generatorOptions, gen.WithForce(c.Bool(force)))
 	}
+
+	if c.IsSet(mainTemplate) {
+		generatorOptions = append(generatorOptions, gen.WithMainTemplateFile(c.Path(mainTemplate)))
+	}
+
+	if c.IsSet(partTemplate) {
+		generatorOptions = append(generatorOptions, gen.WithPartTemplateFile(c.Path(partTemplate)))
+	}
+
 	generator, err := gen.New(generatorOptions...)
 	if err != nil {
 		return cli.Exit(err, 1)

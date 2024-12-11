@@ -1,5 +1,7 @@
 package gen
 
+import "text/template"
+
 const (
 	PartTemplate = `package day{{ printf "%02d" .Day }}
 
@@ -37,3 +39,16 @@ func main() {
 }
 `
 )
+
+type templ struct {
+	text string
+	file string
+	name string
+}
+
+func (t templ) parse() (*template.Template, error) {
+	if t.file != "" {
+		return template.ParseFiles(t.file)
+	}
+	return template.New(t.name).Parse(t.text)
+}

@@ -7,11 +7,13 @@ import (
 )
 
 const (
-	day    = "day"
-	year   = "year"
-	sample = "sample"
-	force  = "force"
-	path   = "path"
+	day          = "day"
+	year         = "year"
+	sample       = "sample"
+	force        = "force"
+	path         = "path"
+	partTemplate = "partTemplate"
+	mainTemplate = "mainTemplate"
 )
 
 func flags() map[string]cli.Flag {
@@ -46,6 +48,16 @@ func flags() map[string]cli.Flag {
 			Name:    "path",
 			Aliases: []string{"p"},
 			Usage:   "Path to your advent of code solutions directory",
+		},
+		partTemplate: &cli.PathFlag{
+			Name:    "partTemplate",
+			Usage:   "Use custom template for part files",
+			EnvVars: []string{"AOC_PART_TEMPLATE"},
+		},
+		mainTemplate: &cli.PathFlag{
+			Name:    "mainTemplate",
+			Usage:   "Use custom template for main file",
+			EnvVars: []string{"AOC_MAIN_TEMPLATE"},
 		},
 	}
 }

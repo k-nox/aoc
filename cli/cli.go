@@ -23,6 +23,8 @@ func StandaloneApp() *cli.App {
 				flagMap[year],
 				flagMap[force],
 				flagMap[path],
+				flagMap[partTemplate],
+				flagMap[mainTemplate],
 			},
 			Action: generate,
 		},
