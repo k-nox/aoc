@@ -45,7 +45,7 @@ func StandaloneApp() *cli.App {
 	return app
 }
 
-func App(registry Registry, moduleName string) *cli.App {
+func App(registry Registry) *cli.App {
 
 	app := cli.NewApp()
 	app.Suggest = true

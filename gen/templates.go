@@ -32,7 +32,7 @@ var registry = cli.Registry{
 }	
 
 func main() {
-	app := cli.App(registry, "{{ .ModuleName }}")
+	app := cli.App(registry)
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
 	}
