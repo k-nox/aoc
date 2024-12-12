@@ -165,7 +165,10 @@ func (g *Generator) createInputs(day int, year int) error {
 		if err != nil {
 			return fmt.Errorf("error writing input file: %w", err)
 		}
-		inpF.Sync()
+		err = inpF.Sync()
+		if err != nil {
+			return fmt.Errorf("error flushing input file to disk: %w", err)
+		}
 	}
 
 	sampleF, err := g.createFile(filepath.Join(inputDir, "sample.txt"))

@@ -222,11 +222,12 @@ func (suite *GeneratorTestSuite) setupTestServer() {
 
 		expectedCookie := "mock"
 		cookie, err := r.Cookie("session")
-		suite.Require().NoError(err)
+		suite.NoError(err)
 		suite.Equal(expectedCookie, cookie.Value)
 
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(`123`))
+		_, err = w.Write([]byte(`123`))
+		suite.NoError(err)
 	}))
 
 	suite.testServer = server

@@ -13,6 +13,8 @@ linters:
     - funlen
     - paralleltest
     - wrapcheck
+    - err113
+    - noctx
 linters-settings:
   mnd:
     ignored-numbers:
