@@ -88,6 +88,7 @@ func New(opts ...Option) (*Generator, error) {
 			text: PartTemplate,
 			name: "part",
 		},
+		baseURL: "https://adventofcode.com",
 	}
 
 	for _, o := range opts {
