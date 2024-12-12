@@ -2,6 +2,8 @@ package gen_test
 
 import (
 	"bufio"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
@@ -12,7 +14,8 @@ import (
 
 type GeneratorTestSuite struct {
 	suite.Suite
-	dir string
+	dir        string
+	testServer *httptest.Server
 }
 
 func (suite *GeneratorTestSuite) SetupSubTest() {
@@ -33,6 +36,10 @@ func (suite *GeneratorTestSuite) SetupSubTest() {
 }
 
 func (suite *GeneratorTestSuite) TearDownSubTest() {
+	if suite.testServer != nil {
+		defer suite.testServer.Close()
+	}
+
 	err := os.RemoveAll(suite.dir)
 	suite.Require().NoError(err)
 	suite.NoDirExists(suite.dir)
@@ -92,6 +99,21 @@ func (suite *GeneratorTestSuite) TestGenerate() {
 			},
 			setup: func() {},
 			check: suite.checkCustomMainGeneration,
+		},
+		{
+			name: "should download input if session is given",
+			options: func() []gen.Option {
+				return []gen.Option{
+					gen.WithPath(suite.dir),
+					gen.WithSession("mock"),
+					gen.WithBaseURL(suite.testServer.URL),
+				}
+			},
+			setup: suite.setupTestServer,
+			check: func(err error) {
+				suite.checkStandardGeneration(err)
+				suite.checkDownloadedInput()
+			},
 		},
 	}
 
@@ -190,4 +212,30 @@ func (suite *GeneratorTestSuite) readFileWithoutNLines(n int, name string) strin
 	}
 
 	return contents
+}
+
+func (suite *GeneratorTestSuite) setupTestServer() {
+	suite.T().Helper()
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		expectedPath := "/2024/day/1/input"
+		suite.Equal(expectedPath, r.URL.Path)
+
+		expectedCookie := "mock"
+		cookie, err := r.Cookie("session")
+		suite.Require().NoError(err)
+		suite.Equal(expectedCookie, cookie.Value)
+
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte(`123`))
+	}))
+
+	suite.testServer = server
+}
+
+func (suite *GeneratorTestSuite) checkDownloadedInput() {
+	suite.T().Helper()
+
+	inpF, err := os.ReadFile(filepath.Join(suite.dir, "input", "2024", "day01", "input.txt"))
+	suite.Require().NoError(err)
+	suite.Equal(inpF, []byte(`123`))
 }

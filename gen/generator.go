@@ -62,6 +62,12 @@ func WithSession(session string) Option {
 	}
 }
 
+func WithBaseURL(baseURL string) Option {
+	return func(g *Generator) {
+		g.baseURL = baseURL
+	}
+}
+
 type Generator struct {
 	path         string
 	force        bool
@@ -69,6 +75,7 @@ type Generator struct {
 	partTemplate templ
 	mainTemplate templ
 	session      string
+	baseURL      string
 }
 
 func New(opts ...Option) (*Generator, error) {
@@ -146,7 +153,11 @@ func (g *Generator) createInputs(day int, year int) error {
 	defer inpF.Close()
 
 	if g.session != "" {
-		data, err := getInput(g.session, day, year)
+		URL, err := buildUrl(g.baseURL, day, year)
+		if err != nil {
+			return err
+		}
+		data, err := getInput(g.session, URL.String())
 		if err != nil {
 			return err
 		}
