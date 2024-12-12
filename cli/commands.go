@@ -27,6 +27,10 @@ func generate(c *cli.Context) error {
 		generatorOptions = append(generatorOptions, gen.WithPartTemplateFile(c.Path(partTemplate)))
 	}
 
+	if c.IsSet(session) {
+		generatorOptions = append(generatorOptions, gen.WithSession(c.String(session)))
+	}
+
 	generator, err := gen.New(generatorOptions...)
 	if err != nil {
 		return cli.Exit(err, 1)
