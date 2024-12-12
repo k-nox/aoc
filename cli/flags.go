@@ -46,9 +46,10 @@ func flags() map[string]cli.Flag {
 			Value:   false,
 		},
 		path: &cli.PathFlag{
-			Name:    path,
-			Aliases: []string{"p"},
-			Usage:   "Path to your advent of code solutions directory",
+			Name:        path,
+			Aliases:     []string{"p"},
+			Usage:       "Path to your advent of code solutions directory",
+			DefaultText: "current working directory",
 		},
 		partTemplate: &cli.PathFlag{
 			Name:    partTemplate,
