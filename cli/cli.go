@@ -25,6 +25,7 @@ func StandaloneApp() *cli.App {
 				flagMap[path],
 				flagMap[partTemplate],
 				flagMap[mainTemplate],
+				flagMap[session],
 			},
 			Action: generate,
 		},

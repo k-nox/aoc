@@ -56,12 +56,26 @@ func WithMainTemplateFile(tmpl string) Option {
 	}
 }
 
+func WithSession(session string) Option {
+	return func(g *Generator) {
+		g.session = session
+	}
+}
+
+func WithBaseURL(baseURL string) Option {
+	return func(g *Generator) {
+		g.baseURL = baseURL
+	}
+}
+
 type Generator struct {
 	path         string
 	force        bool
 	moduleName   string
 	partTemplate templ
 	mainTemplate templ
+	session      string
+	baseURL      string
 }
 
 func New(opts ...Option) (*Generator, error) {
@@ -137,6 +151,25 @@ func (g *Generator) createInputs(day int, year int) error {
 		return err
 	}
 	defer inpF.Close()
+
+	if g.session != "" {
+		URL, err := buildUrl(g.baseURL, day, year)
+		if err != nil {
+			return err
+		}
+		data, err := getInput(g.session, URL.String())
+		if err != nil {
+			return err
+		}
+		_, err = inpF.Write(data)
+		if err != nil {
+			return fmt.Errorf("error writing input file: %w", err)
+		}
+		err = inpF.Sync()
+		if err != nil {
+			return fmt.Errorf("error flushing input file to disk: %w", err)
+		}
+	}
 
 	sampleF, err := g.createFile(filepath.Join(inputDir, "sample.txt"))
 	if err != nil {

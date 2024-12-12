@@ -19,6 +19,24 @@ $ go get github.com/k-nox/aoc
 
 ### Generate
 
+```
+NAME:
+   aoc gen - Generate files for specified day
+
+USAGE:
+   aoc gen [command options]
+
+OPTIONS:
+   --day value, -d value   Specify day (default: today)
+   --year value, -y value  specify year (default: current year)
+   --force, -f             Force generation - may overwrite existing files (default: false)
+   --path value, -p value  Path to your advent of code solutions directory (default: current working directory)
+   --partTemplate value    Use custom template for part files [or set $AOC_PART_TEMPLATE in your env]
+   --mainTemplate value    Use custom template for main file [or set $AOC_MAIN_TEMPLATE in your env]
+   --session value         Advent of Code session string, used for downloading input files [or set $AOC_SESSION in your env]
+   --help, -h              show help
+```
+
 The file structure created by this tool looks like this:
 
 ```
@@ -42,35 +60,24 @@ The file structure created by this tool looks like this:
 |   |   |   |-- sample.txt
 ```
 
-Running `aoc gen` with no flags will assume you want to generate files for the current year & day. For example if it's the Dec 12, 2024, the tool will generate `day12` files under the `2024` folder. You can use the `--day` and `--year` commands to provide a different day & year.
-
-The tool will look for a `go.mod` in your current directory and parse your module name from that to use in the `main.go` template.
-
-If you want the tool to consider a different path your current directory, you can pass that in with a `--path` flag. This will also affect where the files end up being generated.
-
-If the tool detects the requested files are already present, it will fail, unless you choose to pass in a `--force` flag.
-
-The default templates used are in `gen/templates.go`. You can override these in one of two ways:
-
-- a `--partTemplate` or `--mainTemplate` flag with a value of the path to the template file you want to use
-- setting `AOC_PART_TEMPLATE` or `AOC_MAIN_TEMPLATE` in your environment to the path of the template file you want to use.
-
 You can see an example of a custom template file being used in [my solutions repo](https://github.com/k-nox/advent-of-code-solutions/blob/main/templates/part.go.tmpl)
-
-Currently the generated input files are empty, but it's planned to add an option to download them from Advent of Code.
 
 ### Running Solutions
 
-There are two ways to run your solutions:
+```
+NAME:
+   aoc run - Run solutions for specified day
 
-1. Run them directly using the generated `main.go` files: `go run 2024/main.go`
-2. Use aoc to run it: `aoc run`
+USAGE:
+   aoc run [command options]
+
+OPTIONS:
+   --day value, -d value   Specify day (default: today)
+   --year value, -y value  specify year (default: current year)
+   --path value, -p value  Path to your advent of code solutions directory (default: current working directory)
+   --sample, -s            Use sample input (default: false)
+   --help, -h              show help
+```
 
 `aoc run` is just a convenience wrapper that executes `go run <year>/main.go`.
-
-Both options allow you to pass some flags:
-
-- `--sample` will use the `input/<year>/<day>/sample.txt` file instead of the `input.txt` file.
-- `--day=<day>` to choose a day other than today to run
-
-`aoc run` also accepts `--year` to choose the year to run.
+If you want to run your main file directly, it will also accept the `--sample` and `--day` flags.
